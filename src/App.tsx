@@ -2,7 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Root from "./routes/root";
-import ErrorPage from "./error-page";
+import ErrorPage from "./routes/error-page";
+import "./i18n";
 
 import "./App.css";
 
