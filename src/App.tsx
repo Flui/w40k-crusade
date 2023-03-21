@@ -1,29 +1,27 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "@emotion/react";
+import CssBaseline from "@mui/material/CssBaseline";
 
-import Root from "./routes/root";
-import ErrorPage from "./routes/error-page";
+import Forces from "./routes/forces";
+import Force from "./routes/force";
+import Unit from "./routes/unit";
+import routes from "./routes";
+import theme from "./theme";
 import "./i18n";
-
 import "./App.css";
-
-const theme = createTheme();
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-  },
-]);
 
 function App() {
   return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </div>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <CssBaseline />
+        <Routes>
+          <Route path={routes.root} element={<Forces />} />
+          <Route path={routes.force} element={<Force />} />
+          <Route path={routes.unit} element={<Unit />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
