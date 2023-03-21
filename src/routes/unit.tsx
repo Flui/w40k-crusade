@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import Autocomplete, {
   AutocompleteChangeDetails,
   AutocompleteChangeReason,
-  createFilterOptions,
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -14,6 +13,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 
+import GridBreak from "../components/GridBreak";
 import Navigation from "../components/navigation";
 import { useForcesStore } from "../state/forces";
 import { useKeywordStore } from "../state/keyword";
@@ -105,7 +105,8 @@ export default function Units() {
                 label={t("Unit Name")}
               />
             </Grid>
-            <Grid item xs={12} md={6} mdOffset={6}>
+            <GridBreak />
+            <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
                 value={battlefieldRole}
@@ -172,6 +173,7 @@ export default function Units() {
                 onChange={onChangeField("equipment")}
               />
             </Grid>
+            <GridBreak />
             <Grid item xs={12} md={4}>
               <TextField
                 fullWidth
