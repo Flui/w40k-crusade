@@ -1,4 +1,4 @@
-import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { generatePath, useNavigate, useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -24,8 +24,13 @@ export default function Force() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { forceId } = useParams<{ forceId: string }>();
-  const { forces, addUnitToForce, updateForceField, updateUnit } =
-    useForcesStore();
+  const {
+    forces,
+    addUnitToForce,
+    getTotalRequisitionPoints,
+    updateForceField,
+    updateUnit,
+  } = useForcesStore();
   const parsedForceId = forceId ? +forceId : null;
   const force = parsedForceId ? forces[parsedForceId] : null;
 
@@ -57,15 +62,7 @@ export default function Force() {
     navigate(generatePath(routes.unit, { forceId, unitId }));
   };
 
-  const {
-    battleTally,
-    battlesWon,
-    faction,
-    name,
-    playerName,
-    supplyLimit,
-    units,
-  } = force;
+  const { battles, faction, name, playerName, supplyLimit, units } = force;
 
   const supplyUsed = units.reduce((sum, { power }) => sum + power, 0);
 
@@ -80,7 +77,7 @@ export default function Force() {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid xs={10}>
               <TextField
                 fullWidth
                 value={name}
@@ -88,7 +85,15 @@ export default function Force() {
                 label={t("Crusade Force Name")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={2}>
+              <TextField
+                value={getTotalRequisitionPoints(parsedForceId)}
+                label={t("Total Requisition Points")}
+                disabled
+                type="number"
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
                 value={faction}
@@ -96,7 +101,7 @@ export default function Force() {
                 label={t("Crusade Faction")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
                 value={playerName}
@@ -104,25 +109,25 @@ export default function Force() {
                 label={t("Player Name")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
-                value={battleTally}
-                onChange={onChangeField("battleTally")}
+                value={battles.length - 1}
                 label={t("Battle Tally")}
                 type="number"
+                disabled
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
-                value={battlesWon}
-                onChange={onChangeField("battlesWon")}
+                value={battles.filter(({ won }) => won).length}
                 label={t("Battle Won")}
                 type="number"
+                disabled
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
                 value={supplyLimit}
@@ -131,7 +136,7 @@ export default function Force() {
                 disabled
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
                 value={supplyUsed}
@@ -147,13 +152,22 @@ export default function Force() {
                 <TableCell></TableCell>
                 <TableCell>Crusade Cards</TableCell>
                 <TableCell>Power Rating</TableCell>
+                <TableCell>Points Value</TableCell>
                 <TableCell>Crusade Points</TableCell>
                 <TableCell>Deployed</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {units.map(
-                ({ id, name: unitName, image, active, power, points }) => {
+                ({
+                  crusadePoints,
+                  id,
+                  name: unitName,
+                  image,
+                  active,
+                  power,
+                  points,
+                }) => {
                   const labelId = `checkbox-list-secondary-label-${id}`;
 
                   return (
@@ -186,6 +200,12 @@ export default function Force() {
                       >
                         {points}
                       </TableCell>
+                      <TableCell
+                        onClick={openUnit(id)}
+                        sx={{ cursor: "pointer" }}
+                      >
+                        {crusadePoints}
+                      </TableCell>
                       <TableCell padding="checkbox">
                         <Checkbox
                           edge="end"
@@ -200,7 +220,7 @@ export default function Force() {
               )}
               <TableRow>
                 <TableCell></TableCell>
-                <TableCell colSpan={3}>
+                <TableCell colSpan={5}>
                   <Button
                     variant="outlined"
                     startIcon={<AddIcon />}

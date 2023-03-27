@@ -17,6 +17,13 @@ import GridBreak from "../components/GridBreak";
 import Navigation from "../components/navigation";
 import { useForcesStore } from "../state/forces";
 import { useKeywordStore } from "../state/keyword";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 const unitTypes: { value: string; label: string }[] = [
   { value: "hq", label: "HQ" },
@@ -27,6 +34,14 @@ const unitTypes: { value: string; label: string }[] = [
   { value: "flyer", label: "Flyer" },
   { value: "transport", label: "Transport" },
 ];
+
+export function getRankByXP(xp: number) {
+  if (xp < 6) return "Battle Ready";
+  if (xp < 16) return "Blooded";
+  if (xp < 31) return "Battle-hardened";
+  if (xp < 51) return "Heroic";
+  return "Legendary";
+}
 
 export default function Units() {
   const { t } = useTranslation();
@@ -71,9 +86,17 @@ export default function Units() {
     updateUnit(parsedForceId, { ...unit, keywords: value });
   };
 
+  const { battles } = force;
+
+  const sumAgenda1 = battles.reduce(())
+
   const {
+    battleHonours,
+    battleScars,
     battlefieldRole,
+    crusadePoints,
     name,
+    notes,
     faction,
     keywords,
     unitType,
@@ -97,7 +120,7 @@ export default function Units() {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12}>
               <TextField
                 fullWidth
                 value={name}
@@ -105,16 +128,7 @@ export default function Units() {
                 label={t("Unit Name")}
               />
             </Grid>
-            <GridBreak />
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                value={battlefieldRole}
-                onChange={onChangeField("battlefieldRole")}
-                label={t("Battlefield Role")}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
                 value={faction}
@@ -122,7 +136,15 @@ export default function Units() {
                 label={t("Crusade Faction")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                value={battlefieldRole}
+                onChange={onChangeField("battlefieldRole")}
+                label={t("Battlefield Role")}
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
               <Autocomplete
                 fullWidth
                 multiple
@@ -144,12 +166,12 @@ export default function Units() {
                   <TextField
                     {...params}
                     label={t("Selectable Keywords")}
-                    placeholder={t("Keyword")}
+                    placeholder={t("Keyword") || undefined}
                   />
                 )}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 id="unit-type-select"
                 fullWidth
@@ -165,7 +187,7 @@ export default function Units() {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <TextField
                 fullWidth
                 value={equipment}
@@ -174,7 +196,7 @@ export default function Units() {
               />
             </Grid>
             <GridBreak />
-            <Grid item xs={12} md={4}>
+            <Grid xs={12} md={3}>
               <TextField
                 fullWidth
                 value={power}
@@ -183,7 +205,16 @@ export default function Units() {
                 type="number"
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid xs={12} md={3}>
+              <TextField
+                fullWidth
+                value={points}
+                label={t("Points")}
+                onChange={onChangeNumberField("points")}
+                type="number"
+              />
+            </Grid>
+            <Grid xs={12} md={3}>
               <TextField
                 fullWidth
                 value={experiencePoints}
@@ -192,16 +223,139 @@ export default function Units() {
                 type="number"
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid xs={12} md={3}>
               <TextField
                 fullWidth
-                value={points}
+                value={crusadePoints}
                 label={t("Crusade Points")}
-                onChange={onChangeNumberField("points")}
+                onChange={onChangeNumberField("crusadePoints")}
                 type="number"
               />
             </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                value={getRankByXP(experiencePoints)}
+                label={t("Rank")}
+                disabled
+              />
+            </Grid>
+            <GridBreak />
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                multiline
+                minRows={2}
+                value={battleHonours}
+                label={t("Battle Honours")}
+                onChange={onChangeField("battleHonours")}
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                multiline
+                minRows={2}
+                value={battleScars}
+                label={t("Battle Scars")}
+                onChange={onChangeField("battleScars")}
+              />
+            </Grid>
+            <Grid xs={12}>
+              <TextField
+                fullWidth
+                multiline
+                minRows={3}
+                value={notes}
+                label={t("Notes")}
+                onChange={onChangeField("notes")}
+              />
+            </Grid>
           </Grid>
+        </Box>
+        <Box>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell>XP gained per tally</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    value={agenda1Name}
+                    onChange={onChangeField("agenda1Name")}
+                    label={t("Agenda 1 (Combat Patrols, 500 points, 3CP)")}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    value={agenda1XP}
+                    onChange={onChangeNumberField("agenda1XP")}
+                    label={t("XP")}
+                    type="number"
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    value={agenda2Name}
+                    onChange={onChangeField("agenda2Name")}
+                    label={t("Agenda 2 (Incursions, 1000 points, 6CP)")}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    value={agenda2XP}
+                    onChange={onChangeNumberField("agenda2XP")}
+                    label={t("XP")}
+                    type="number"
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    value={agenda3Name}
+                    onChange={onChangeField("agenda3Name")}
+                    label={t("Agenda 3 (Strike Forces, 2000 points, 12CP)")}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    value={agenda3XP}
+                    onChange={onChangeNumberField("agenda3XP")}
+                    label={t("XP")}
+                    type="number"
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    value={agenda4Name}
+                    onChange={onChangeField("agenda4Name")}
+                    label={t("Agenda 4 (Onslaughts, 3000 points, 18CP)")}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    value={agenda4XP}
+                    onChange={onChangeNumberField("agenda4XP")}
+                    label={t("XP")}
+                    type="number"
+                  />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </Box>
       </Container>
     </>

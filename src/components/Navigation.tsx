@@ -1,9 +1,17 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { generatePath, Link as RouterLink, useParams } from "react-router-dom";
+import {
+  generatePath,
+  Link as RouterLink,
+  matchPath,
+  useMatch,
+  useParams,
+} from "react-router-dom";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -24,6 +32,7 @@ const drawerWidth = 240;
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { forceId, unitId } = useParams();
+  const matchAgendas = useMatch(routes.agendas);
   const { forces } = useForcesStore();
   const { t } = useTranslation();
 
@@ -43,6 +52,8 @@ export default function Navigation() {
         unit.name,
         generatePath(routes.unit, { forceId, unitId }),
       ]);
+    if (matchAgendas)
+      breadcrumbs.push(["Agendas", generatePath(routes.agendas, { forceId })]);
 
     return breadcrumbs;
   }, [forces, forceId, t, unitId]);
@@ -82,8 +93,12 @@ export default function Navigation() {
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Breadcrumbs aria-label="breadcrumb">
+          <Box sx={{ display: { xs: "none", sm: "block" }, flexGrow: 1 }}>
+            <Breadcrumbs
+              aria-label="breadcrumb"
+              color="inherit"
+              sx={{ flexWrap: "nowrap", flexGrow: 1, flexShrink: 1 }}
+            >
               {navItems.map(([name, link]) => (
                 <Link
                   component={RouterLink}
@@ -96,6 +111,16 @@ export default function Navigation() {
               ))}
             </Breadcrumbs>
           </Box>
+          {forceId && !matchAgendas && (
+            <Button
+              component={RouterLink}
+              color="inherit"
+              to={generatePath(routes.agendas, { forceId })}
+            >
+              Agendas
+            </Button>
+          )}
+          <Button color="inherit">Battles</Button>
         </Toolbar>
       </AppBar>
       <Box component="nav">
