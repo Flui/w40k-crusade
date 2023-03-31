@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 
-import Navigation from "../components/navigation";
+import Navigation from "../components/Navigation";
 import { useForcesStore } from "../state/forces";
 
 export default function Agendas() {

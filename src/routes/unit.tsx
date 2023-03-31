@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 
 import GridBreak from "../components/GridBreak";
-import Navigation from "../components/navigation";
+import Navigation from "../components/Navigation";
 import { useForcesStore } from "../state/forces";
 import { useKeywordStore } from "../state/keyword";
 import {
@@ -85,10 +85,6 @@ export default function Units() {
       addKeywordOption(details?.option);
     updateUnit(parsedForceId, { ...unit, keywords: value });
   };
-
-  const { battles } = force;
-
-  const sumAgenda1 = battles.reduce(())
 
   const {
     battleHonours,
@@ -273,7 +269,8 @@ export default function Units() {
             </Grid>
           </Grid>
         </Box>
-        <Box>
+        {/*
+          <Box>
           <Table>
             <TableHead>
               <TableRow>
@@ -357,6 +354,7 @@ export default function Units() {
             </TableBody>
           </Table>
         </Box>
+                */}
       </Container>
     </>
   );
