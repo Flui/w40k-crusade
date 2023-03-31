@@ -41,7 +41,7 @@ export default function Navigation() {
   };
 
   const navItems = useMemo(() => {
-    const breadcrumbs = [[t("Crusade Forces"), generatePath(routes.root)]];
+    const breadcrumbs = [[t("Crusade Forces"), generatePath(routes.forces)]];
     const force = forceId ? forces[+forceId] : null;
     if (force)
       breadcrumbs.push([force.name, generatePath(routes.force, { forceId })]);

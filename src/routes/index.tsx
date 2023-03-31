@@ -1,6 +1,6 @@
 export default {
-  root: "/",
-  force: "/:forceId",
-  agendas: "/:forceId/agendas",
-  unit: "/:forceId/units/:unitId",
+  forces: "/forces",
+  force: "/forces/:forceId",
+  agendas: "/forces/:forceId/agendas",
+  unit: "/forces/:forceId/units/:unitId",
 };

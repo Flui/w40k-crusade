@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 
@@ -15,11 +15,12 @@ import "./App.css";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <CssBaseline />
         <Routes>
+          <Route path="/" element={<Navigate to={routes.forces} />} />
           <Route
-            path={routes.root}
+            path={routes.forces}
             element={<Forces />}
             errorElement={<ErrorPage />}
           />
